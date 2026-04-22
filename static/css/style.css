@@ -1,0 +1,131 @@
+:root{
+  --bg:#0f172a;
+  --card:#1e293b;
+  --text:#f8fafc;
+  --muted:#cbd5e1;
+  --accent:#2563eb;
+  --border:rgba(255,255,255,.08);
+}
+body.light{
+  --bg:#eef4ff;
+  --card:#ffffff;
+  --text:#0f172a;
+  --muted:#475569;
+  --accent:#1d4ed8;
+  --border:rgba(15,23,42,.08);
+}
+*{box-sizing:border-box}
+body{
+  margin:0;
+  font-family:Arial, Helvetica, sans-serif;
+  background:linear-gradient(180deg,var(--bg),#111827);
+  color:var(--text);
+}
+.topbar{
+  position:sticky;
+  top:0;
+  z-index:10;
+  display:flex;
+  justify-content:space-between;
+  gap:16px;
+  align-items:flex-start;
+  padding:20px;
+  background:rgba(15,23,42,.88);
+  backdrop-filter:blur(10px);
+  border-bottom:1px solid var(--border);
+}
+.sub{margin:4px 0 0;color:var(--muted)}
+.actions{
+  display:flex;
+  flex-wrap:wrap;
+  gap:10px;
+}
+button{
+  background:var(--accent);
+  color:white;
+  border:none;
+  border-radius:12px;
+  padding:10px 14px;
+  cursor:pointer;
+  font-weight:700;
+}
+.container{
+  width:min(1200px,92%);
+  margin:24px auto 40px;
+}
+.card{
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:22px;
+  padding:18px;
+  margin-bottom:18px;
+  box-shadow:0 12px 40px rgba(0,0,0,.20);
+}
+.grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+  gap:14px;
+  margin-top:14px;
+}
+.item-card{
+  background:rgba(255,255,255,.03);
+  border:1px solid var(--border);
+  border-radius:18px;
+  padding:16px;
+}
+textarea{
+  width:100%;
+  min-height:110px;
+  margin-top:10px;
+  border-radius:12px;
+  border:1px solid var(--border);
+  padding:10px;
+  resize:vertical;
+}
+input[type="password"], input[type="text"]{
+  width:100%;
+  padding:10px;
+  border-radius:12px;
+  border:1px solid var(--border);
+  margin-top:10px;
+}
+.resposta{
+  margin-top:12px;
+  padding:12px;
+  border-radius:14px;
+  background:rgba(37,99,235,.12);
+  border:1px solid rgba(37,99,235,.3);
+}
+.upload-row{
+  display:flex;
+  flex-wrap:wrap;
+  gap:10px;
+  margin-bottom:14px;
+}
+.preview{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(120px,1fr));
+  gap:10px;
+}
+.preview img{
+  width:100%;
+  border-radius:14px;
+  object-fit:cover;
+  height:120px;
+}
+#viewer3d{
+  width:100%;
+  height:320px;
+  margin-top:16px;
+  border-radius:18px;
+  overflow:hidden;
+  border:1px solid var(--border);
+  background:#020617;
+}
+.small{
+  color:var(--muted);
+  font-size:.95rem;
+}
+@media (max-width:700px){
+  .topbar{flex-direction:column}
+}

@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Revisão de Anatomia</title>
+  <link rel="manifest" href="/manifest.json" />
+  <link rel="stylesheet" href="/static/css/style.css" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+</head>
+<body>
+  <header class="topbar">
+    <div>
+      <h1>Revisão de Anatomia Humana</h1>
+      <p class="sub">Educação Física • revisão prática e teórica</p>
+    </div>
+    <div class="actions">
+      <button id="installBtn">Baixar app</button>
+      <button onclick="toggleTheme()">Claro/Escuro</button>
+      <button onclick="gerarPDF()">Gerar PDF</button>
+    </div>
+  </header>
+
+  <main class="container">
+    <section class="hero card">
+      <h2>Bem-vindos à revisão</h2>
+      <p>Hoje começaremos a revisão do conteúdo ministrado até o momento para a avaliação.</p>
+    </section>
+
+    <section class="card">
+      <h2>Etapa 1 — Revisão prática</h2>
+      <p>Vocês verão várias peças setadas e passarão em rodízio simulando a prova prática. Hoje podem consultar uns aos outros e marcar no próprio aplicativo o que estão enxergando.</p>
+      <div id="estruturasGrid" class="grid"></div>
+    </section>
+
+    <section class="card">
+      <h2>Etapa 2 — Questões teóricas e casos clínicos</h2>
+      <p>Agora vamos para as questões envolvendo sistema esquelético, muscular, articular e termos de relação e comparação.</p>
+      <div id="questoesGrid" class="grid"></div>
+    </section>
+
+    <section class="card">
+      <h2>Seção 3D e imagens</h2>
+      <div class="upload-row">
+        <input type="file" id="fotoUpload" accept="image/*" multiple />
+        <button onclick="abrirCamera()">Tirar foto</button>
+      </div>
+      <div id="previewFotos" class="preview"></div>
+      <div id="viewer3d"></div>
+    </section>
+  </main>
+
+  <script src="/static/js/tts.js"></script>
+  <script src="/static/js/viewer3d.js"></script>
+  <script src="/static/js/app.js"></script>
+</body>
+</html>
