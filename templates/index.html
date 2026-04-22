@@ -141,7 +141,27 @@
           </div>
 
           <div id="previewFotos" class="preview"></div>
-          <div id="viewer3d"></div>
+
+          <div id="viewer3d">
+            <div class="panel-card" style="margin:16px; text-align:center;">
+              <p class="small">Carregue 1 a 3 imagens para visualizar aqui.</p>
+            </div>
+          </div>
+
+          <div class="card-actions" style="margin-top:14px;">
+            <button class="btn btn-secondary" onclick="girarEsquerda()">
+              <i data-lucide="rotate-ccw"></i>
+              Girar ⟵
+            </button>
+            <button class="btn btn-secondary" onclick="alternarRotacao()">
+              <i data-lucide="play-circle"></i>
+              Pausar / girar
+            </button>
+            <button class="btn btn-secondary" onclick="girarDireita()">
+              <i data-lucide="rotate-cw"></i>
+              Girar ⟶
+            </button>
+          </div>
         </section>
       </div>
     </section>
