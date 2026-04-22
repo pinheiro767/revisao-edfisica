@@ -1,12 +1,14 @@
 let deferredPrompt = null;
 
 document.addEventListener("DOMContentLoaded", async () => {
-  registrarSW();
-  prepararInstalacao();
   restaurarTema();
+  prepararAbas();
+  prepararInstalacao();
+  registrarSW();
   await carregarEstruturas();
   await carregarQuestoes();
   prepararUploadFotos();
+  if (window.lucide) lucide.createIcons();
 });
 
 function registrarSW(){
@@ -24,7 +26,7 @@ function prepararInstalacao(){
   window.addEventListener("beforeinstallprompt", (e) => {
     e.preventDefault();
     deferredPrompt = e;
-    installBtn.style.display = "inline-block";
+    installBtn.style.display = "inline-flex";
   });
 
   installBtn.addEventListener("click", async () => {
@@ -51,27 +53,29 @@ function restaurarTema(){
   }
 }
 
-function toggleAccordion(button){
-  const item = button.closest(".accordion-item");
-  item.classList.toggle("open");
-}
+function prepararAbas(){
+  const botoes = document.querySelectorAll(".tab-btn");
+  const paineis = document.querySelectorAll(".tab-panel");
 
-function abrirSecao(id){
-  const target = document.getElementById(id);
-  if(!target) return;
+  botoes.forEach(btn => {
+    btn.addEventListener("click", () => {
+      const alvo = btn.dataset.tab;
 
-  if(!target.classList.contains("open")){
-    target.classList.add("open");
-  }
+      botoes.forEach(b => b.classList.remove("active"));
+      paineis.forEach(p => p.classList.remove("active"));
 
-  target.scrollIntoView({ behavior: "smooth", block: "start" });
+      btn.classList.add("active");
+      document.getElementById(alvo).classList.add("active");
+
+      if (window.lucide) lucide.createIcons();
+    });
+  });
 }
 
 async function carregarEstruturas(){
   const r = await fetch("/api/estruturas");
   const data = await r.json();
   const grid = document.getElementById("estruturasGrid");
-
   grid.innerHTML = "";
 
   data.forEach((item) => {
@@ -90,21 +94,28 @@ async function carregarEstruturas(){
       </label>
 
       <div class="card-actions">
-        <button class="btn btn-secondary" onclick="lerTexto(${JSON.stringify(item.nome)})">Ouvir</button>
-        <button class="btn btn-primary" onclick="verRespostaProtegida(${item.id}, 'estrutura')">Ver resposta</button>
+        <button class="btn btn-secondary" onclick="lerTexto(${JSON.stringify(item.nome)})">
+          <i data-lucide="volume-2"></i>
+          Ouvir
+        </button>
+        <button class="btn btn-primary" onclick="verRespostaProtegida(${item.id}, 'estrutura')">
+          <i data-lucide="lock"></i>
+          Ver resposta
+        </button>
       </div>
 
       <div id="resp-estrutura-${item.id}" class="resposta" style="display:none"></div>
     `;
     grid.appendChild(card);
   });
+
+  if (window.lucide) lucide.createIcons();
 }
 
 async function carregarQuestoes(){
   const r = await fetch("/api/questoes");
   const data = await r.json();
   const grid = document.getElementById("questoesGrid");
-
   grid.innerHTML = "";
 
   data.forEach((item) => {
@@ -117,18 +128,27 @@ async function carregarQuestoes(){
       <textarea placeholder="Escreva sua resposta..."></textarea>
 
       <div class="card-actions">
-        <button class="btn btn-secondary" onclick="lerTexto(${JSON.stringify(item.pergunta)})">Ouvir</button>
-        <button class="btn btn-primary" onclick="verRespostaProtegida(${item.id}, 'questao')">Ver resposta</button>
+        <button class="btn btn-secondary" onclick="lerTexto(${JSON.stringify(item.pergunta)})">
+          <i data-lucide="volume-2"></i>
+          Ouvir
+        </button>
+        <button class="btn btn-primary" onclick="verRespostaProtegida(${item.id}, 'questao')">
+          <i data-lucide="lock"></i>
+          Ver resposta
+        </button>
       </div>
 
       <div id="resp-questao-${item.id}" class="resposta" style="display:none"></div>
     `;
     grid.appendChild(card);
   });
+
+  if (window.lucide) lucide.createIcons();
 }
 
 async function verRespostaProtegida(id, tipo){
   const senha = prompt("Digite a senha da professora:");
+
   if (senha !== "Pinheiro") {
     alert("Senha incorreta.");
     return;
@@ -138,6 +158,7 @@ async function verRespostaProtegida(id, tipo){
     const r = await fetch("/api/questoes");
     const data = await r.json();
     const item = data.find(x => x.id === id);
+
     const alvo = document.getElementById(`resp-questao-${id}`);
     alvo.style.display = "block";
     alvo.innerHTML = `<strong>Resposta esperada:</strong> ${item.resposta}`;
@@ -145,9 +166,20 @@ async function verRespostaProtegida(id, tipo){
     const r = await fetch("/api/estruturas");
     const data = await r.json();
     const item = data.find(x => x.id === id);
+
     const alvo = document.getElementById(`resp-estrutura-${id}`);
     alvo.style.display = "block";
     alvo.innerHTML = `<strong>Resposta esperada:</strong> ${item.resposta}`;
+  }
+}
+
+function lerTexto(texto){
+  if ("speechSynthesis" in window) {
+    const utterance = new SpeechSynthesisUtterance(texto);
+    utterance.lang = "pt-BR";
+    utterance.rate = 0.95;
+    speechSynthesis.cancel();
+    speechSynthesis.speak(utterance);
   }
 }
 
@@ -157,7 +189,6 @@ function gerarPDF(){
 
   doc.setFontSize(16);
   doc.text("Revisão de Anatomia Humana", 10, 14);
-
   doc.setFontSize(11);
   doc.text("Exportação simples do aplicativo.", 10, 24);
 
@@ -174,7 +205,7 @@ function prepararUploadFotos(){
     preview.innerHTML = "";
 
     if(files.length === 0){
-      limparViewer();
+      if (window.limparViewer) limparViewer();
       return;
     }
 
@@ -183,24 +214,20 @@ function prepararUploadFotos(){
     urls.forEach((url, index) => {
       const wrapper = document.createElement("div");
       wrapper.className = "preview-item";
-      wrapper.innerHTML = `
-        <img src="${url}" alt="Foto ${index + 1}">
-      `;
+      wrapper.innerHTML = `<img src="${url}" alt="Foto ${index + 1}">`;
       preview.appendChild(wrapper);
     });
 
-    carregarFotosNoViewer(urls);
+    if (window.carregarFotosNoViewer) {
+      carregarFotosNoViewer(urls);
+    }
   }
 
   if(inputArquivos){
-    inputArquivos.addEventListener("change", () => {
-      processarArquivos(inputArquivos.files);
-    });
+    inputArquivos.addEventListener("change", () => processarArquivos(inputArquivos.files));
   }
 
   if(inputCamera){
-    inputCamera.addEventListener("change", () => {
-      processarArquivos(inputCamera.files);
-    });
+    inputCamera.addEventListener("change", () => processarArquivos(inputCamera.files));
   }
 }
