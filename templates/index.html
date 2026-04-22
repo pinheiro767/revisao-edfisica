@@ -3,55 +3,150 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Revisão de Anatomia</title>
+  <title>Revisão de Anatomia Humana</title>
+
   <link rel="manifest" href="/manifest.json" />
   <link rel="stylesheet" href="/static/css/style.css" />
+
+  <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+  <script src="https://cdn.jsdelivr.net/npm/lucide@0.263.0/dist/umd/lucide.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 </head>
 <body>
+  <div class="bg-orb orb-1"></div>
+  <div class="bg-orb orb-2"></div>
+
   <header class="topbar">
-    <div>
-      <h1>Revisão de Anatomia Humana</h1>
-      <p class="sub">Educação Física • revisão prática e teórica</p>
+    <div class="brand">
+      <div class="brand-badge">UEM</div>
+      <div>
+        <h1>Revisão de Anatomia Humana</h1>
+        <p class="sub">Educação Física • prática, teoria e visualização 3D</p>
+      </div>
     </div>
+
     <div class="actions">
-      <button id="installBtn">Baixar app</button>
-      <button onclick="toggleTheme()">Claro/Escuro</button>
-      <button onclick="gerarPDF()">Gerar PDF</button>
+      <button id="installBtn" class="btn btn-secondary">
+        <i data-lucide="download"></i>
+        Baixar app
+      </button>
+      <button onclick="toggleTheme()" class="btn btn-secondary">
+        <i data-lucide="sun-moon"></i>
+        Tema
+      </button>
+      <button onclick="gerarPDF()" class="btn btn-primary">
+        <i data-lucide="file-text"></i>
+        PDF
+      </button>
     </div>
   </header>
 
   <main class="container">
-    <section class="hero card">
-      <h2>Bem-vindos à revisão</h2>
-      <p>Hoje começaremos a revisão do conteúdo ministrado até o momento para a avaliação.</p>
-    </section>
-
-    <section class="card">
-      <h2>Etapa 1 — Revisão prática</h2>
-      <p>Vocês verão várias peças setadas e passarão em rodízio simulando a prova prática. Hoje podem consultar uns aos outros e marcar no próprio aplicativo o que estão enxergando.</p>
-      <div id="estruturasGrid" class="grid"></div>
-    </section>
-
-    <section class="card">
-      <h2>Etapa 2 — Questões teóricas e casos clínicos</h2>
-      <p>Agora vamos para as questões envolvendo sistema esquelético, muscular, articular e termos de relação e comparação.</p>
-      <div id="questoesGrid" class="grid"></div>
-    </section>
-
-    <section class="card">
-      <h2>Seção 3D e imagens</h2>
-      <div class="upload-row">
-        <input type="file" id="fotoUpload" accept="image/*" multiple />
-        <button onclick="abrirCamera()">Tirar foto</button>
+    <section class="hero">
+      <div class="hero-content">
+        <span class="pill">Revisão guiada</span>
+        <h2>Hoje começaremos a revisão do conteúdo ministrado até o momento</h2>
+        <p>
+          Vocês verão peças setadas, anotarão observações, responderão casos clínicos
+          e poderão usar a área de imagens para revisão visual.
+        </p>
       </div>
-      <div id="previewFotos" class="preview"></div>
-      <div id="viewer3d"></div>
+    </section>
+
+    <section class="tabs-wrapper">
+      <div class="tabs">
+        <button class="tab-btn active" data-tab="tab-orientacoes">
+          <i data-lucide="layout-panel-top"></i>
+          Orientações
+        </button>
+        <button class="tab-btn" data-tab="tab-pratica">
+          <i data-lucide="bone"></i>
+          Revisão prática
+        </button>
+        <button class="tab-btn" data-tab="tab-teoria">
+          <i data-lucide="book-open"></i>
+          Questões teóricas
+        </button>
+        <button class="tab-btn" data-tab="tab-3d">
+          <i data-lucide="image-plus"></i>
+          Seção 3D
+        </button>
+      </div>
+
+      <div class="tab-panels">
+        <section id="tab-orientacoes" class="tab-panel active">
+          <div class="panel-card">
+            <h3>Primeira etapa</h3>
+            <p>
+              Vocês estão vendo várias peças anatômicas setadas. Passem em rodízio
+              simulando a prova prática. Hoje vocês podem consultar uns aos outros.
+            </p>
+          </div>
+
+          <div class="panel-card">
+            <h3>Segunda etapa</h3>
+            <p>
+              Agora vocês receberão questões envolvendo sistema esquelético, muscular,
+              articular e termos de comparação e relação. Aproveitem para interagir bastante.
+            </p>
+          </div>
+        </section>
+
+        <section id="tab-pratica" class="tab-panel">
+          <div class="section-head">
+            <h3>45 estruturas práticas</h3>
+            <p>Abra os cards, marque o que identificou e anote suas observações.</p>
+          </div>
+          <div id="estruturasGrid" class="grid"></div>
+        </section>
+
+        <section id="tab-teoria" class="tab-panel">
+          <div class="section-head">
+            <h3>83 questões teóricas</h3>
+            <p>Casos clínicos e perguntas com resposta protegida por senha.</p>
+          </div>
+          <div id="questoesGrid" class="grid"></div>
+        </section>
+
+        <section id="tab-3d" class="tab-panel">
+          <div class="panel-card">
+            <h3>Galeria visual e pseudo-3D</h3>
+            <p>
+              Você pode carregar de 1 a 3 imagens. O app posiciona as fotos em profundidade,
+              criando uma visualização espacial interativa.
+            </p>
+            <p class="small">
+              Essa seção faz uma visualização espacial com imagens. Não é reconstrução 3D real por fotogrametria.
+            </p>
+          </div>
+
+          <div class="upload-grid">
+            <label class="upload-box">
+              <i data-lucide="upload"></i>
+              <span>Importar imagens</span>
+              <input type="file" id="fotoUpload" accept="image/*" multiple />
+            </label>
+
+            <label class="upload-box">
+              <i data-lucide="camera"></i>
+              <span>Tirar foto</span>
+              <input type="file" id="cameraInput" accept="image/*" capture="environment" multiple />
+            </label>
+
+            <button class="btn btn-primary" onclick="limparViewer()">
+              <i data-lucide="trash-2"></i>
+              Limpar
+            </button>
+          </div>
+
+          <div id="previewFotos" class="preview"></div>
+          <div id="viewer3d"></div>
+        </section>
+      </div>
     </section>
   </main>
 
-  <script src="/static/js/tts.js"></script>
   <script src="/static/js/viewer3d.js"></script>
   <script src="/static/js/app.js"></script>
 </body>
